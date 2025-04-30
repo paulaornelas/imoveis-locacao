@@ -1,71 +1,96 @@
-# 🏡 Sistema de Imóveis e Proprietários - Laravel API
+# 🏡 Sistema de Imóveis e Proprietários – Laravel API
 
-## Pré-requisitos
+API REST para cadastro, consulta, atualização, remoção e filtragem de imóveis e seus proprietários.
 
-Antes de começar, garanta que você tem instalado em sua máquina:
+---
+
+## 📋 Pré-requisitos
 
 - [PHP 8.1+](https://www.php.net/downloads.php)
 - [Composer](https://getcomposer.org/)
 - [MySQL](https://www.mysql.com/)
 - [Git](https://git-scm.com/)
-- [Wamp](https://www.wampserver.com/en/)
+- [WAMP](https://www.wampserver.com/en/) (ou ambiente similar)
 - (Opcional) [Laravel Installer](https://laravel.com/docs/10.x/installation)
 
-## Rodar o projeto localmente
+---
 
-### 1. Clone o repositório
-``` git clone https://github.com/paulaornelas/imoveis-locacao.git ```
-``` cd imoveis-locacao ```
+## 🚀 Rodando o projeto localmente
 
-### 2. Instale as dependências PHP
-``` composer install ```
+1. **Clone o repositório**
+    ```bash
+    git clone https://github.com/paulaornelas/imoveis-locacao.git
+    cd imoveis-locacao
+    ```
 
-### 3. Copie a configuração de ambiente
-``` cp .env.example .env ```
+2. **Instale as dependências PHP**
+    ```bash
+    composer install
+    ```
 
-### 4. Gere a chave da aplicação
-``` php artisan key:generate ```
+3. **Configure as variáveis de ambiente**
+    ```bash
+    cp .env.example .env
+    ```
 
-### 5. Configure o banco de dados
-No arquivo .env, configure as seguintes variáveis:
+4. **Gere a chave da aplicação**
+    ```bash
+    php artisan key:generate
+    ```
 
-```plaintext
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=api_imoveis
-DB_USERNAME=root
-DB_PASSWORD=
-```
+5. **Configure o banco de dados**  
+    Abra o arquivo `.env` e ajuste as variáveis:
 
-### 6. Crie o banco de dados ```api_imoveis```
+    ```dotenv
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=api_imoveis
+    DB_USERNAME=root
+    DB_PASSWORD=
+    ```
 
-### 7. Rode as migrations e seeders
-```  ```
-``` php artisan migrate --seed ``` ou ``` php artisan migrate:fresh --seed ```
+6. **Crie a base de dados**  
+    No MySQL, crie o banco `api_imoveis` (via phpMyAdmin ou CLI).
 
-### 8. Inicie o servidor
-``` php artisan serve ```
-Acesse a API pelo localhost
+7. **Rode as migrations e seeders**
+    ```bash
+    php artisan migrate --seed
+    # ou, para um reset total no banco:
+    php artisan migrate:fresh --seed
+    ```
 
-### 9. Rodar os testes
-``` php artisan test ```
+8. **Inicie o servidor**
+    ```bash
+    php artisan serve
+    ```
+    Acesse a API: [http://localhost:8000](http://localhost:8000)
 
-Para rodar apenas os testes do ImovelControllerTest:
-``` php artisan test --filter=ImovelControllerTest ```
+9. **(Opcional) Execute os testes**
+    ```bash
+    php artisan test
+    # Para executar somente os testes de imóveis:
+    php artisan test --filter=ImovelControllerTest
+    ```
 
-## Exemplo de uso da API
+---
 
-Listar imóveis: `GET /api/imoveis`
-Criar novo imóvel: `POST /api/imoveis`
+## 📚 Rotas da API
 
-```plaintext
+### 📦 Imóveis
+
+#### Listar todos os imóveis  
+**GET** `/api/imoveis`
+
+#### Visualizar imóvel por ID  
+**GET** `/api/imoveis/{id}`
+
+#### Criar novo imóvel  
+**POST** `/api/imoveis`  
+**Exemplo de corpo (JSON):**
+```json
 {
   "endereco": "Rua Joaquim, 17",
   "valor": 250000.00,
   "proprietario_id": 1
 }
-```
-
-Filtrar imóveis por valor: `GET /api/imoveis/filter?valor_minimo=100000&valor_maximo=500000`
-Listar proprietários: `GET /api/proprietarios`
