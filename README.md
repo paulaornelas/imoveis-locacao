@@ -88,21 +88,71 @@ API REST para cadastro, consulta, atualização, remoção e filtragem de imóve
 #### Criar novo imóvel  
 
 **POST** `/api/imoveis`  
-**Exemplo de corpo (JSON):**
-```json
-{
-  "endereco": "Rua Joaquim, 17",
-  "valor": 250000.00,
-  "proprietario_id": 1
-}
 #### Atualizar imóvel  
 `PUT /api/imoveis/{id}`
 
-Exemplo de corpo (JSON):
+Exemplo de corpo (apenas os campos):
 
-```json
-{
-  "endereco": "Rua Nova, 22",
-  "valor": 350000.00,
-  "proprietario_id": 2
-}
+- endereco: Rua Nova, 22
+- valor: 350000.00
+- proprietario_id: 2
+
+#### Remover imóvel  
+`DELETE /api/imoveis/{id}`
+
+#### Filtrar imóveis  
+`GET /api/imoveis/filter` + parâmetros de busca
+
+Parâmetros disponíveis:
+- valor_minimo: Valor mínimo do imóvel (opcional)
+- valor_maximo: Valor máximo do imóvel (opcional)
+- cidade: Trecho do endereço (cidade) que deve conter no campo "endereco" (opcional)
+
+Exemplos de requisições:
+- Buscar todos em "Uberlândia":  
+  `/api/imoveis/filter?cidade=Uberlândia`
+- Buscar por cidade e faixa de valor:  
+  `/api/imoveis/filter?cidade=Lake Lomaton&valor_minimo=10000`
+- Buscar imóveis até 500 mil:  
+  `/api/imoveis/filter?valor_maximo=500000`
+
+---
+
+### 👤 Proprietários
+
+#### Listar todos os proprietários  
+`GET /api/proprietarios`
+
+#### Visualizar proprietário por ID  
+`GET /api/proprietarios/{id}`
+
+#### Criar novo proprietário  
+`POST /api/proprietarios`
+
+Exemplo de corpo (apenas os campos):
+
+- nome: Maria da Silva
+- email: maria.silva@email.com
+
+#### Atualizar proprietário  
+`PUT /api/proprietarios/{id}`
+
+Exemplo de corpo (apenas os campos):
+
+- nome: João Souza
+- email: joao@email.com
+
+#### Remover proprietário  
+`DELETE /api/proprietarios/{id}`
+
+---
+
+## 🔎 Detalhes do filtro de imóveis (`/api/imoveis/filter`)
+
+- A filtragem de cidade ocorre por parte do endereço (o parâmetro `cidade` é um trecho do campo "endereco").
+- O valor passado para `cidade` não precisa ser exato; basta estar contido no texto do endereço.
+- Os filtros de valor e cidade podem ser combinados.
+
+Exemplo:  
+Buscar imóveis que tenham “Lake Lomaton” no endereço e valor acima de 50000:
+
