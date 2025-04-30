@@ -1,115 +1,107 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Imovel;
-use App\Models\Proprietario;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 
 class ImovelController extends Controller
 {
-    // Lista todos os imóveis
     public function index()
     {
         try {
-            $imoveis = Imovel::with('proprietario')->get(); // Puxa todos os imóveis com os dados dos proprietários.
-            return response()->json($imoveis, 200); // Retorna os imóveis com status 200 (OK).
+            $imoveis = Imovel::with('proprietario')->get();
+            return response()->json($imoveis, 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Erro ao listar imóveis.'], 500); // Retorna erro em caso de falha com status 500 (Internal Server Error).
+            return response()->json(['error' => 'Erro ao listar imóveis.'], 500);
         }
     }
 
-    // Armazena um novo imóvel
     public function store(Request $request)
     {
         try {
-            $request->validate([ // Valida os dados recebidos na requisição.
-                'endereco' => 'required|string', // o endereço é obrigatório e deve ser uma string.
-                'valor' => 'required|numeric', // O valor é obrigatório e deve ser um número.
-                'proprietario_id' => 'required|exists:proprietarios,id', // O ID do proprietário é obrigatório e deve existir na tabela proprietarios.
+            $request->validate([
+                'endereco' => 'required|string',
+                'valor' => 'required|numeric',
+                'proprietario_id' => 'required|exists:proprietarios,id',
             ]);
-
-            $imovel = Imovel::create($request->all()); // Cria um novo registro de Imovel com os dados validados.
-            return response()->json($imovel, 201); // Retorna o novo imóvel com status 201 (Created).
+            $imovel = Imovel::create($request->all());
+            return response()->json($imovel, 201);
         } catch (ValidationException $e) {
-            return response()->json(['error' => $e->validator->errors()], 422); // Retorna erro em caso de falha com status 422 (Unprocessable Entity).
+            throw $e;
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Erro ao criar imóvel.'], 500); // Retorna erro em caso de falha com status 500 (Internal Server Error).
+            return response()->json(['error' => 'Erro ao criar imóvel.'], 500);
         }
     }
 
-    // Exibe um imóvel específico
     public function show($id)
     {
         try {
-            $imovel = Imovel::with('proprietario')->findOrFail($id); // Tenta encontrar o imóvel pelo ID.
-            return response()->json($imovel, 200); // Retorna o imóvel com status 200 (OK).
+            $imovel = Imovel::with('proprietario')->findOrFail($id);
+            return response()->json($imovel, 200);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Imóvel não encontrado.'], 404);  // Retorna erro se o imóvel não for encontrado com status 404 (Not Found).
+            return response()->json(['error' => 'Imóvel não encontrado.'], 404);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Erro ao buscar imóvel.'], 500); // Retorna erro em caso de falha com status 500 (Internal Server Error).
+            return response()->json(['error' => 'Erro ao buscar imóvel.'], 500);
         }
     }
 
-    // Atualiza um imóvel específico
     public function update(Request $request, $id)
     {
-        try { // Valida os dados recebidos na requisição.
+        try {
             $request->validate([
-                'endereco' => 'required|string', // O endereço é obrigatório e deve ser uma string.
-                'valor' => 'required|numeric', // O valor é obrigatório e deve ser um número.
-                'proprietario_id' => 'required|exists:proprietarios,id', // O ID do proprietário é obrigatório e deve existir na tabela proprietarios.
+                'endereco' => 'required|string',
+                'valor' => 'required|numeric',
+                'proprietario_id' => 'required|exists:proprietarios,id',
             ]);
-
-            $imovel = Imovel::findOrFail($id); // Tenta encontrar o imóvel pelo ID. 
-            $imovel->update($request->all()); // Atualiza o registro do imóvel com os dados validados.
-            return response()->json($imovel, 200); // Retorna o imóvel atualizado em formato JSON com status 200
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Imóvel não encontrado.'], 404); // Retorna erro se o imóvel não for encontrado com status 404 (Not Found).
+            $imovel = Imovel::findOrFail($id);
+            $imovel->update($request->all());
+            return response()->json($imovel, 200);
         } catch (ValidationException $e) {
-            return response()->json(['error' => $e->validator->errors()], 422); // Retorna erro em caso de falha com status 422 (Unprocessable Entity).
+            throw $e;
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Imóvel não encontrado.'], 404);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Erro ao atualizar imóvel.'], 500); // Retorna erro em caso de falha com status 500 (Internal Server Error).
+            return response()->json(['error' => 'Erro ao atualizar imóvel.'], 500);
         }
     }
 
-    // Remove um imóvel específico
     public function destroy($id)
     {
         try {
-            $imovel = Imovel::findOrFail($id); // Tenta encontrar o imóvel pelo ID.
-            $imovel->delete(); // Remove o registro do imóvel.
-            return response()->json(null, 204); // Retorna status 204 (No Content) para informar que a remoção foi feita.
+            $imovel = Imovel::findOrFail($id);
+            $imovel->delete();
+            return response()->json(null, 204);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Imóvel não encontrado.'], 404); // Retorna erro se o imóvel não for encontrado com status 404 (Not Found).
+            return response()->json(['error' => 'Imóvel não encontrado.'], 404);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Erro ao remover imóvel.'], 500); // Retorna erro em caso de falha com status 500 (Internal Server Error).
+            return response()->json(['error' => 'Erro ao remover imóvel.'], 500);
         }
     }
 
-    public function filter(Request $request) // GET /api/imoveis/filter?valor_minimo=100000&valor_maximo=500000
+    public function filter(Request $request)
     {
         try {
-            $query = Imovel::with('proprietario'); // Inicia a consulta na tabela de imóveis, incluindo a relação com o modelo de proprietário.
-
-            // Aplica os filtros se estiverem presentes na requisição.
-            if ($request->has('valor_minimo')) { // Verifica se o parâmetro 'valor_minimo' foi enviado na requisição.
-                $query->where('valor', '>=', $request->input('valor_minimo')); // Adiciona uma condição para filtrar imóveis com valor maior ou igual ao valor mínimo.
+            $query = Imovel::with('proprietario');
+            if ($request->has('valor_minimo')) {
+                $query->where('valor', '>=', $request->input('valor_minimo'));
             }
-
-            if ($request->has('valor_maximo')) { // Verifica se o parâmetro 'valor_maximo' foi enviado na requisição.
-                $query->where('valor', '<=', $request->input('valor_maximo')); // Adiciona uma condição para filtrar imóveis com valor menor ou igual ao valor máximo.
+            if ($request->has('valor_maximo')) {
+                $query->where('valor', '<=', $request->input('valor_maximo'));
             }
-
-            $imoveis = $query->get(); // Executa a consulta e puxa todos os imóveis que atendem aos critérios de filtragem.
-
-            return response()->json($imoveis, 200); // Retorna o imóvel com status 200 (OK).
-        } catch (\Exception $e) { 
-            return response()->json(['error' => 'Erro ao filtrar imóveis.'], 500); // Retorna erro em caso de falha com status 500 (Internal Server Error).
+            if ($request->has('cidade') && $request->filled('cidade')) {
+                $cidade = trim(preg_replace('/\s+/', ' ', $request->input('cidade')));
+                $query->whereRaw(
+                    "REPLACE(REPLACE(REPLACE(endereco, CHAR(13), ''), CHAR(10), ''), ' ', '') LIKE ?",
+                    ['%' . str_replace(' ', '', $cidade) . '%']
+                );
+            }
+            $imoveis = $query->get();
+            return response()->json($imoveis, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erro ao filtrar imóveis.'], 500);
         }
     }
 }
-
