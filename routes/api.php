@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('imoveis/filter', [ImovelController::class, 'filter']);
 Route::apiResource('proprietarios', ProprietarioController::class);
 Route::apiResource('imoveis', ImovelController::class);
-Route::get('imoveis/filter', [ImovelController::class, 'filter']);
+
