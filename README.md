@@ -14,7 +14,7 @@ Antes de começar, garanta que você tem instalado em sua máquina:
 ## Rodar o projeto localmente
 
 ### 1. Clone o repositório
-> git clone https://github.com/paulaornelas/imoveis-locacao.git
+`git clone https://github.com/paulaornelas/imoveis-locacao.git
 > cd imoveis-locacao
 
 ### 2. Instale as dependências PHP
