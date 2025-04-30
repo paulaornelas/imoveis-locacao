@@ -86,6 +86,7 @@ API REST para cadastro, consulta, atualização, remoção e filtragem de imóve
 **GET** `/api/imoveis/{id}`
 
 #### Criar novo imóvel  
+
 **POST** `/api/imoveis`  
 **Exemplo de corpo (JSON):**
 ```json
@@ -93,4 +94,15 @@ API REST para cadastro, consulta, atualização, remoção e filtragem de imóve
   "endereco": "Rua Joaquim, 17",
   "valor": 250000.00,
   "proprietario_id": 1
+}
+#### Atualizar imóvel  
+`PUT /api/imoveis/{id}`
+
+Exemplo de corpo (JSON):
+
+```json
+{
+  "endereco": "Rua Nova, 22",
+  "valor": 350000.00,
+  "proprietario_id": 2
 }
